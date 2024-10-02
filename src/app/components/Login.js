@@ -1,7 +1,7 @@
 'use client'; // This marks it as a client component
 
 import { useState } from 'react'; 
-import { createUser } from '../utils/db';  
+import { createOrUpdateUser } from '../utils/db';  
 import { useUser } from './UserContext';
 import { useRouter } from 'next/navigation';
 
@@ -20,7 +20,7 @@ export default function Login() {
       password: password
     };
     
-    const response = await createUser(formData);
+    const response = await createOrUpdateUser(formData);
     setUsernameContext(username);
     setMessage(response.message); 
     router.push('/questionnaires');

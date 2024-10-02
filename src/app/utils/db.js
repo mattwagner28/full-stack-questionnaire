@@ -29,32 +29,38 @@ const pool = new Pool({
     return rows;
   }
 
-  export async function createUser(formData) {
-  const { username, password } = formData;
+  export async function createOrUpdateUser(formData) {
+    const { username, password } = formData;
   
     try {
-      const query = `
-        INSERT INTO users (username, password) 
-        VALUES ($1, $2);
+      // Checks if username already exists in database
+      const checkUserQuery = `
+        SELECT * FROM users WHERE username = $1;
       `;
-      await pool.query(query, [username, password]);
+      const { rows } = await pool.query(checkUserQuery, [username]);
   
-      return { message: 'User created successfully' };
-      
+      if (rows.length > 0) {
+        // If the username exists, update the password
+        const updatePasswordQuery = `
+          UPDATE users
+          SET password = $2
+          WHERE username = $1;
+        `;
+        await pool.query(updatePasswordQuery, [username, password]);
+        return { message: 'Password updated successfully' };
+      } else {
+        // If the username does not exist, it creates a new user
+        const createUserQuery = `
+          INSERT INTO users (username, password)
+          VALUES ($1, $2);
+        `;
+        await pool.query(createUserQuery, [username, password]);
+        return { message: 'User created successfully' };
+      }
   
     } catch (error) {
-      console.error('Error creating user:', error);
-  
-      return { message: 'Error creating user. Please try again.' };
+      console.error('Error creating or updating user:', error);
+      return { message: 'Error creating or updating user. Please try again.' };
     }
   }
   
-  export async function updatePassword(username, password) {
-    const query = `
-    UPDATE users
-    SET password = $2
-    WHERE username = $1;
-    `;
-    const { rows } = await pool.query(query, [username, password])
-    return rows;
-  };
