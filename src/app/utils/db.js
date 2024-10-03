@@ -61,7 +61,7 @@ ssl: { rejectUnauthorized: false }
         null
       }
     } catch (error) {
-
+      console.error('Error checking previous answers:', error);
     }
   }
 

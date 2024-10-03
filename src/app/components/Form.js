@@ -52,15 +52,17 @@ export default function Form({ data }) {
     useEffect(() => {
         const getSavedAnswers = async () => {
             const previousAnswers = await getPreviousSubmission(usernameContext);
+            if (previousAnswers) {
             setAnswers(previousAnswers);
+            }
         }
 
         getSavedAnswers();
     }, [questionnaire_id, usernameContext]);
 
-    useEffect(() => {
-        console.log('Current answers data:', answers);
-    }, [answers]);
+    // useEffect(() => {
+    //     console.log('Current answers data:', answers);
+    // }, [answers]);
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -89,7 +91,7 @@ export default function Form({ data }) {
             answers
         };
 
-        console.log('Form submitted:', finalSubmission);
+        // console.log('Form submitted:', finalSubmission);
 
         saveIntakeForm(finalSubmission);
         router.push('/questionnaires');
