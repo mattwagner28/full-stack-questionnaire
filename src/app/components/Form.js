@@ -2,16 +2,14 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useUser } from './UserContext';
-import { saveIntakeForm } from '../utils/db';
+import { saveIntakeForm, getPreviousSubmission } from '../utils/db';
 
 export default function Form({ data }) {
     const questionnaire_id = data[0]?.questionnaire_id; 
     const questionIDs = data.map((item) => item.question_id);
-
     const { usernameContext } = useUser(); 
 
     const [answers, setAnswers] = useState([]); 
-
     const [error, setError] = useState(null);
     const router = useRouter();
 
@@ -52,6 +50,15 @@ export default function Form({ data }) {
     };
 
     useEffect(() => {
+        const getSavedAnswers = async () => {
+            const previousAnswers = await getPreviousSubmission(usernameContext);
+            setAnswers(previousAnswers);
+        }
+
+        getSavedAnswers();
+    }, [questionnaire_id, usernameContext]);
+
+    useEffect(() => {
         console.log('Current answers data:', answers);
     }, [answers]);
 
@@ -85,7 +92,6 @@ export default function Form({ data }) {
         console.log('Form submitted:', finalSubmission);
 
         saveIntakeForm(finalSubmission);
-
         router.push('/questionnaires');
     };
 

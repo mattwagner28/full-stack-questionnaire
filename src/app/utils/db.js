@@ -29,15 +29,44 @@ const pool = new Pool({
     return rows;
   }
 
-  // export async function getPreviousSubmission(username) {
+  export async function getPreviousSubmission(username) {
 
-  //   //will check to see user's previously saved answers
-  //   try {
+    //will check to see user's previously saved answers, by newest verson of answer
+    try {
+      const checkForSubmissionsQuery = `
+        SELECT 
+            qa.question_id,
+            qa.user_id,
+            u.username,
+            qa.answer,
+            qa.created_at
+        FROM 
+            questionnaire_answers qa
+        INNER JOIN 
+            users u ON qa.user_id = u.id
+        WHERE 
+            qa.created_at = (
+                SELECT MAX(created_at)
+                FROM questionnaire_answers
+                WHERE question_id = qa.question_id
+                AND user_id = qa.user_id
+            )
+        AND 
+            u.username = $1
+        ORDER BY 
+            qa.created_at DESC;
 
-  //   } catch (error) {
+      `
+      const { rows } = await pool.query(checkForSubmissionsQuery, [username])
+      if (rows.length > 0) {
+        return rows
+      } else {
+        null
+      }
+    } catch (error) {
 
-  //   }
-  // }
+    }
+  }
 
 
 
