@@ -67,7 +67,7 @@ export default function Form({ data }) {
 
         setError(null);
 
-        // validate that no answers are empty or only whitespace
+        // validate that no answers are empty or only  whitespace
         const hasEmptyAnswers = questionIDs.some((questionId) => {
             const answerObj = answers.find((a) => a.question_id === questionId);
             const answer = answerObj ? answerObj.answer : null;
