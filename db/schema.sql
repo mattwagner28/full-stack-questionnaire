@@ -72,6 +72,7 @@
 	    questionnaire_id INT REFERENCES questionnaire_questionnaires (id),
 	    priority INT NOT NULL
 	  );
+
 	  INSERT INTO questionnaire_junction (question_id, questionnaire_id, priority)
 	  VALUES
 	    (1, 1, 0),
@@ -84,8 +85,6 @@
 	    (5, 3, 10),
 	    (6, 3, 20);
 
-	    //
-
 	  //
 
 	  CREATE TABLE users (
@@ -96,9 +95,11 @@
 
 	  //
 	  
-	  CREATE TABLE questionnaire_submissions (
-	    id SERIAL PRIMARY KEY,
-	    user_id INT REFERENCES users (id),
-	    questionnaire_id INT REFERENCES questionnaire_questionnaires (id),
-	    answers JSONB NOT NULL
-  );
+CREATE TABLE questionnaire_answers (
+    id SERIAL PRIMARY KEY,
+    user_id INT REFERENCES users(id),
+    question_id INT REFERENCES questionnaire_questions(id),
+    questionnaire_id INT REFERENCES questionnaire_questionnaires(id),
+    answer JSONB,
+    created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
+);

@@ -4,9 +4,9 @@ import Form from '@/app/components/Form';
 
 const IntakeForm = async ({ params }) => {
     const  { type } = await params;
-    console.log(type);
+    // console.log(type);
     const data = await getQuestions(type);
-    console.log(data); 
+    // console.log(data); 
     
     return (
 

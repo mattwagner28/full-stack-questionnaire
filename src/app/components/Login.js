@@ -1,4 +1,4 @@
-'use client'; // This marks it as a client component
+'use client';
 
 import { useState } from 'react'; 
 import { createOrUpdateUser } from '../utils/db';  
@@ -20,10 +20,14 @@ export default function Login() {
       password: password
     };
     
-    const response = await createOrUpdateUser(formData);
     setUsernameContext(username);
-    setMessage(response.message); 
-    router.push('/questionnaires');
+    const response = await createOrUpdateUser(formData);
+    if (username === 'admin') {
+      router.push('/admin');
+    } else {
+
+      router.push('/questionnaires');
+  }
 
   };
 
