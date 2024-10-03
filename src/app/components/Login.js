@@ -6,7 +6,6 @@ import { useUser } from './UserContext';
 import { useRouter } from 'next/navigation';
 
 export default function Login() {
-  const [message, setMessage] = useState(null); 
   const [username, setUsername] = useState(''); 
   const [password, setPassword] = useState(''); 
   const { setUsernameContext } = useUser();
@@ -21,7 +20,7 @@ export default function Login() {
     };
     
     setUsernameContext(username);
-    const response = await createOrUpdateUser(formData);
+    await createOrUpdateUser(formData);
     if (username === 'admin') {
       router.push('/admin');
     } else {
@@ -52,7 +51,6 @@ export default function Login() {
         />
         <button type="submit">Login</button>
       </form>
-      {message && <p aria-live="polite">{message}</p>} 
     </div>
   );
 }

@@ -23,7 +23,7 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <UserProvider>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`flex justify-center mt-20 ${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         {children}
       </body>
