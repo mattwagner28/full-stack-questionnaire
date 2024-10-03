@@ -5,11 +5,11 @@ import { useUser } from './UserContext';
 import { saveIntakeForm, getPreviousSubmission } from '../utils/db';
 
 export default function Form({ data }) {
-    const questionnaire_id = data[0]?.questionnaire_id; 
+    const questionnaire_id = data[0]?.questionnaire_id;
     const questionIDs = data.map((item) => item.question_id);
-    const { usernameContext } = useUser(); 
+    const { usernameContext } = useUser();
 
-    const [answers, setAnswers] = useState([]); 
+    const [answers, setAnswers] = useState([]);
     const [error, setError] = useState(null);
     const router = useRouter();
 
@@ -53,23 +53,23 @@ export default function Form({ data }) {
         const getSavedAnswers = async () => {
             const previousAnswers = await getPreviousSubmission(usernameContext);
             if (previousAnswers) {
-            setAnswers(previousAnswers);
+                // filters previous answers so only those matching questionIDs from questionnaire are set
+                const filteredAnswers = previousAnswers.filter((answer) =>
+                    questionIDs.includes(answer.question_id)
+                );
+                setAnswers(filteredAnswers);
             }
-        }
+        };
 
         getSavedAnswers();
     }, [questionnaire_id, usernameContext]);
-
-    // useEffect(() => {
-    //     console.log('Current answers data:', answers);
-    // }, [answers]);
 
     const handleSubmit = (event) => {
         event.preventDefault();
 
         setError(null);
 
-        // validate that no answers are empty or only  whitespace
+        // validate that no answers are empty or only whitespace
         const hasEmptyAnswers = questionIDs.some((questionId) => {
             const answerObj = answers.find((a) => a.question_id === questionId);
             const answer = answerObj ? answerObj.answer : null;
@@ -81,14 +81,14 @@ export default function Form({ data }) {
         });
 
         if (hasEmptyAnswers) {
-            setError('Please fill out all fields. Answers cannot be empty or whitespace.');
+            setError('Please fill out all fields. Answers cannot be empty.');
             return;
         }
 
         const finalSubmission = {
             username: usernameContext,
             questionnaire_id,
-            answers
+            answers,
         };
 
         // console.log('Form submitted:', finalSubmission);
@@ -108,24 +108,23 @@ export default function Form({ data }) {
                             item.question.options.map((option, index) => (
                                 <div key={index}>
                                     <input
-                                        type={item.question.question.includes("Select all that apply") ? 'checkbox' : 'radio'}
+                                        type={item.question.question.includes('Select all that apply') ? 'checkbox' : 'radio'}
                                         id={`option-${index}-${item.question_id}`}
                                         name={`question-${item.question_id}`}
                                         value={option}
                                         checked={Array.isArray(answers.find((a) => a.question_id === item.question_id)?.answer)
                                             ? answers.find((a) => a.question_id === item.question_id)?.answer.includes(option)
-                                            : answers.find((a) => a.question_id === item.question_id)?.answer === option
-                                        }
-                                        onChange={(e) => handleChange(e, item.question_id, item.question.question.includes("Select all that apply") ? 'checkbox' : 'radio')}
+                                            : answers.find((a) => a.question_id === item.question_id)?.answer === option}
+                                        onChange={(e) => handleChange(e, item.question_id, item.question.question.includes('Select all that apply') ? 'checkbox' : 'radio')}
                                     />
                                     <label htmlFor={`option-${index}-${item.question_id}`}>{option}</label>
                                 </div>
                             ))
                         ) : (
                             <input
-                                type="text"
+                                type='text'
                                 name={`question-${item.question_id}`}
-                                placeholder="Your answer here"
+                                placeholder='Your answer here'
                                 value={answers.find((a) => a.question_id === item.question_id)?.answer || ''}
                                 onChange={(e) => handleChange(e, item.question_id, 'text')}
                             />
@@ -133,7 +132,7 @@ export default function Form({ data }) {
                     </div>
                 </div>
             ))}
-            <button type="submit">Submit</button>
+            <button type='submit'>Submit</button>
         </form>
     );
 }

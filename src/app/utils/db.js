@@ -66,6 +66,34 @@ ssl: { rejectUnauthorized: false }
   }
 
 
+  //Gets data for admin panel
+  export async function getUserData() {
+     
+    try {
+      const getUserDataQuery = `
+      SELECT question_id, user_id, question, username, answer, name, questionnaire_id, MAX(created_at) AS latest_created_at
+      FROM questionnaire_answers
+      INNER JOIN users
+      ON questionnaire_answers.user_id = users.id
+      INNER JOIN questionnaire_questions
+      ON questionnaire_answers.question_id = questionnaire_questions.id
+      INNER JOIN questionnaire_questionnaires
+      ON questionnaire_answers.questionnaire_id = questionnaire_questionnaires.id
+      GROUP BY username, user_id, question_id, answer, question, questionnaire_id, name
+      ORDER BY user_id;
+      `
+  
+      const { rows } = await pool.query(getUserDataQuery)
+
+      return rows;
+
+    }
+    catch (error) {
+      console.error("Error getting user data:", error)
+    }
+    
+  }
+
 
   //This is just a temporary non-authenticating login function for simplificaiton of testing the app
   export async function createOrUpdateUser(formData) {
