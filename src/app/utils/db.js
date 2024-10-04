@@ -152,7 +152,7 @@ export async function saveIntakeForm(formData) {
         for (let answerObj of answers) {
             const { question_id, answer } = answerObj;
 
-            // check if answer has been submitted
+            // check if answers in questionnaire have been submitted
             const checkQuery = `
                 SELECT * FROM questionnaire_answers 
                 WHERE user_id = $1 
@@ -162,7 +162,7 @@ export async function saveIntakeForm(formData) {
             const { rows: existingAnswerRows } = await pool.query(checkQuery, [userId, questionnaire_id, question_id]);
 
             if (existingAnswerRows.length > 0) {
-                // ff answer has been submitted, update the answer and the timestamp
+                // if answer has been submitted, update the questionnaire and the timestamp
                 const updateQuery = `
                     UPDATE questionnaire_answers 
                     SET answer = $1, created_at = CURRENT_TIMESTAMP
