@@ -24,17 +24,16 @@ export default function Login() {
     if (username === 'admin') {
       router.push('/admin');
     } else {
-
       router.push('/questionnaires');
-  }
-
+    }
   };
 
   return (
-    <div>
-      <form onSubmit={handleSubmit}>
+    <div className="flex justify-center items-center mt-4">
+      <form className="flex flex-col w-full max-w-sm bg-white p-8 shadow-lg rounded-lg" onSubmit={handleSubmit}>
         <input
           type="text"
+          className="border border-gray-300 rounded-lg p-3 mb-4 text-gray-700 focus:outline-none focus:ring-2 focus:ring-cyan-500"
           name="username"
           placeholder="Enter username"
           required
@@ -43,13 +42,19 @@ export default function Login() {
         />
         <input
           type="password"
+          className="border border-gray-300 rounded-lg p-3 mb-6 text-gray-700 focus:outline-none focus:ring-2 focus:ring-cyan-500"
           name="password"
           placeholder="Enter password"
           required
           value={password} 
           onChange={(e) => setPassword(e.target.value)} 
         />
-        <button type="submit">Login</button>
+        <button
+          type="submit"
+          className="bg-cyan-600 text-white font-semibold py-3 rounded-lg hover:bg-cyan-700 transition duration-300"
+        >
+          LOGIN
+        </button>
       </form>
     </div>
   );

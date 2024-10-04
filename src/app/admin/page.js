@@ -48,34 +48,37 @@ export default function AdminPanel() {
   };
 
   return (
-    <div>
-      <h1 className='font-bold'>ADMIN PANEL</h1>
+    <div className="w-4/5 py-8 px-4">
+      <h1 className="text-4xl font-bold text-cyan-600 text-center mb-4">ADMIN PANEL</h1>
+      
+      <h2 className="text-2xl font-bold text-cyan-600 mb-4">Users</h2>
       {Object.keys(groupedUserData).map((username) => (
-        <div key={username} className="user-section">
+        <div key={username} className="bg-white shadow-md rounded-lg mb-4 p-4">
           <h2 
             onClick={() => toggleUserVisibility(username)} 
-            className='cursor-pointer hover:bg-cyan-200'
+            className="text-lg font-semibold text-cyan-700 cursor-pointer p-1 rounded transition"
           >
-            User: {username}
+            {username}
           </h2>
 
           {visibleUser === username && (
-            <div className='mb-2'>
+            <div className="pl-6 mt-4">
+              <h2 className="text-md font-bold text-cyan-600 mb-4">Questionnaires Completed</h2>
               {Object.keys(groupedUserData[username]).map((questionnaireName) => (
-                <div key={questionnaireName} className="questionnaire-section">
+                <div key={questionnaireName} className="bg-gray-50 border-l-4 border-cyan-400 rounded-lg p-2 mb-4">
                   <h3 
                     onClick={() => toggleQuestionnaireVisibility(questionnaireName)} 
-                    className='cursor-pointe hover:bg-cyan-200'
+                    className="text-md font-medium text-cyan-600 cursor-pointer p-2 rounded transition"
                   >
-                    Questionnaire: {questionnaireName}
+                    {questionnaireName}
                   </h3>
 
                   {visibleQuestionnaire === questionnaireName && (
-                    <div className='mb-2'>
+                    <div className="mt-2 pl-4">
                       {groupedUserData[username][questionnaireName].map((qna, index) => (
-                        <div key={index} className="question-answer-section">
-                          <p><strong>Question:</strong> {qna.question}</p>
-                          <p><strong>Answer:</strong> {Array.isArray(qna.answer) ? qna.answer.join(', ') : qna.answer}</p>
+                        <div key={index} className="mb-4 p-4 bg-white rounded-lg shadow">
+                          <p className="text-gray-800"><strong>Question:</strong> {qna.question}</p>
+                          <p className="text-gray-600"><strong>Answer:</strong> {Array.isArray(qna.answer) ? qna.answer.join(', ') : qna.answer}</p>
                         </div>
                       ))}
                     </div>
